@@ -42,7 +42,7 @@ module.exports.userSign = async (req, res) => {
             sameSite: "strict",
             path: "/",
             httpOnly: true,
-            expires: new Date(Date.now() + 900000)
+            expires: new Date(Date.now() + 90000000)
           })
           .json({
             id: finduser._id,
@@ -102,7 +102,7 @@ module.exports.userSignup = async (req, res) => {
           sameSite: "strict",
           path: "/",
           httpOnly: true,
-          expires: new Date(Date.now() + 900000)
+          expires: new Date(Date.now() + 90000000)
         })
         .json({
           user: user,
