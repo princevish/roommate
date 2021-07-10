@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const db = require("./config/config");
-const passport_jwt = require("./config/passort_jwt");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const path = require("path");
