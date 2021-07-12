@@ -143,15 +143,19 @@ module.exports.logOut = (req, res) => {
   }
 };
 module.exports.list = async (req, res) => {
-  const user = await User.findOne({ _id: req.userID }).populate({
+  try{  const user = await User.findOne({ _id: req.userID }).populate({
     path: "room",
     populate: "users",
   });
   res.status(200).json({
     data: user,
-  });
+  });}catch(e){
+    console.log(e)
+  }
+
 };
 module.exports.Fav = async (req, res) => {
+  try{
   const roomuser = await User.findOne({ _id: req.userID }).populate({
     path: "fav",
     populate: "users",
@@ -160,4 +164,7 @@ module.exports.Fav = async (req, res) => {
   res.status(200).json({
     data: roomuser,
   });
+}catch(e){
+  console.log(e)
+}
 };

@@ -94,14 +94,18 @@ module.exports.addRoom = async (req, res) => {
 
 module.exports.roomview = async (req, res) => {
   try {
-    const user = await Room.findOne({ _id: req.params.id }).sort({'updatedAt':-1}).populate("users");
-
+    const user = await Room.findOne({ _id: req.params.id }).populate("users");
+    if(user==null){
+       return res.status(404).json({
+      data: "room not found"
+    });
+    }
     return res.status(200).json({
-      data: user,
+      data: user
     });
   } catch (e) {
     return res.status(404).json({
-      data: e,
+      data: e
     });
   }
 };
@@ -138,3 +142,34 @@ module.exports.state = async (req, res) => {
     });
   }
 };
+
+module.exports.roomdelete=async(req,res)=>{
+  try {
+    const room = await Room.findOne({
+      _id: req.params.id
+    });
+ 
+    if(room.users == req.userID){
+   
+     await User.updateOne({ _id: req.userID },{"$pull": { "room": room._id}})
+     room.remove();
+      room.images.map((item) => {
+          
+          deletephoto(item);
+        });
+   return res.status(200).json({
+      data: "delele room"
+    });
+
+    }
+    
+
+    return res.status(403).json({
+      data: "user not allow to delele",
+    });
+  } catch (e) {
+    return res.status(404).json({
+      data: e,
+    });
+  }
+}
