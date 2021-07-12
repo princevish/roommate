@@ -77,6 +77,7 @@ module.exports.addRoom = async (req, res) => {
 
     const image = req.files;
     image.map((item) => {
+      
       createroom.images.push(`upload/room/${item.filename}`);
     });
     createroom.save();
