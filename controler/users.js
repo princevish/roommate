@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { validationResult } = require("express-validator");
 const fs = require("fs");
+const mail=require('../config/mail')
+const mailtemp=require('../middleware/tempmail');
+
+
 
 module.exports.userSign = async (req, res) => {
   const messages = [];
@@ -168,3 +172,98 @@ module.exports.Fav = async (req, res) => {
   console.log(e)
 }
 };
+
+module.exports.forget_password = async (req, res) => {
+
+  try{
+     const { email} = req.body;
+   const finduser = await User.findOne({
+      email,
+    }).select("+password");
+   if (!finduser) {
+      return res.status(404).json({
+        message: "email not found ",
+      });
+    } 
+const secret=process.env.FORGET_CODE + finduser.password;
+const payload={
+  email:finduser.email,
+  id:finduser._id
+}
+const token =jwt.sign(payload,secret,{expiresIn:'15m'})
+const link= `${req.hostname}/forget-password/${finduser._id}/${token}`
+var mailOptions = {
+  from: 'no-reply@roommate.com',
+  to: finduser.email,
+  subject: 'Forget Password of RoomMate User',
+  html: mailtemp.tempmail(link)
+};
+await mail.sendmail(mailOptions);
+ res.status(200).json({
+    message: "Ckeck you mail",
+  });
+}catch(e){
+  console.log(e)
+}
+};
+
+
+
+module.exports.check_link = async (req, res) => {
+
+try{
+
+    const {id ,token}=req.params;
+    const finduser = await User.findOne({_id:id}).select("+password");
+    if (!finduser) {
+      return res.status(404).json({
+        message: "Invalid Id found ",
+      });
+    } 
+const secret=process.env.FORGET_CODE + finduser.password;
+const payload=jwt.verify(token,secret);
+ return res.status(200).json({
+        message: "Link verifed",
+      });
+}catch(e){
+   return res.status(403).json({
+        message: e,
+      });
+}
+};
+
+module.exports.set_password = async (req, res) => {
+
+try{
+const {password,password2}=req.body
+
+if(password===password2){
+    const {id ,token}=req.params;
+    const finduser = await User.findById({_id:id}).select("+password");
+    if (!finduser) {
+      return res.status(404).json({
+        message: "Invalid Id found ",
+      });
+    } 
+
+const secret=process.env.FORGET_CODE + finduser.password;
+const payload=jwt.verify(token,secret);
+const pass = await bcrypt.hash(password, 12);
+finduser.password=pass;
+await finduser.save();
+return res.status(200).json({
+        message: "password create successfull..",
+      });
+}
+else{
+  return res.status(403).json({
+        message: "password not match",
+      });
+}
+}catch(e){
+   return res.status(403).json({
+        message: e,
+      });
+}
+};
+

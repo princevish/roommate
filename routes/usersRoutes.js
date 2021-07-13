@@ -16,4 +16,7 @@ router.post(
 router.get("/list", auth, controler.list);
 router.get("/fav", auth, controler.Fav);
 router.get("/logout", controler.logOut);
+router.post("/forget-password", controler.forget_password);
+router.get("/forget-password/:id/:token", controler.check_link);
+router.post("/forget-password/:id/:token", controler.set_password);
 module.exports = router;
