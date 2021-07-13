@@ -106,7 +106,7 @@ module.exports.userSignup = async (req, res) => {
           sameSite: "strict",
           path: "/",
           httpOnly: true,
-          expires: new Date(Date.now() + 90000000)
+          expires: new Date(Date.now() + 86400000)
         })
         .json({
           user: user,
@@ -118,7 +118,7 @@ module.exports.userSignup = async (req, res) => {
         fs.unlinkSync(`upload/profile/${req.file.filename}`);
       }
       return res.status(302).json({
-        message: "User email not available",
+        message: "User E-mail Not Available",
       });
     }
   } catch (err) {
@@ -133,11 +133,11 @@ module.exports.logOut = (req, res) => {
     if (req.cookies.key) {
       res.clearCookie("key");
       res.status(200).json({
-        msg: "logout",
+        msg: "Logout",
       });
     } else {
       res.status(404).json({
-        error: "cookie not found",
+        error: "Cookie Not Found",
       });
     }
   } catch (err) {
@@ -182,7 +182,7 @@ module.exports.forget_password = async (req, res) => {
     }).select("+password");
    if (!finduser) {
       return res.status(404).json({
-        message: "email not found ",
+        message: "E-mail Not Found",
       });
     } 
 const secret=process.env.FORGET_CODE + finduser.password;
@@ -200,10 +200,12 @@ var mailOptions = {
 };
 await mail.sendmail(mailOptions);
  res.status(200).json({
-    message: "Ckeck you mail",
+    message: "Password Reset Link Send to Your E-mail",
   });
 }catch(e){
-  console.log(e)
+   return res.status(403).json({
+        message: e,
+      });
 }
 };
 
@@ -252,12 +254,12 @@ const pass = await bcrypt.hash(password, 12);
 finduser.password=pass;
 await finduser.save();
 return res.status(200).json({
-        message: "password create successfull..",
+        message: "Password Create Successfull..",
       });
 }
 else{
   return res.status(403).json({
-        message: "password not match",
+        message: "Password Not Match",
       });
 }
 }catch(e){
