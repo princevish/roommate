@@ -1,3 +1,24 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /api/
+Disallow: /post/
+Disallow: /edit/
+Disallow: /account/
+Disallow: /chat/
+Disallow: /profile/
+Disallow: /payments/
+Disallow: /nf/
+Disallow: /items$
+
+#General Filters
+Disallow: */*?*[
+Disallow: */*?*%5B
+Disallow: /delhi_g4058659/cars_c84/q-2-and*
+Disallow: *_and_*
+
+#RE Filters
+Allow: /api/re-projects
+Disallow: */*?*filter=*bathrooms_
+Disallow: */*?*filter=*brokerfree_
+Disallow: */*?*filter=*pets_
+Disallow: */*?*filter=*surface_
+
