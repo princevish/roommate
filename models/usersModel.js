@@ -30,6 +30,10 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Room'
     }],
+    chat: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Chat'
+    }],
     fav: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Room',
