@@ -1,0 +1,2 @@
+(this.webpackJsonproommate=this.webpackJsonproommate||[]).push([[30],{749:function(t,o,n){"use strict";n.r(o),n.d(o,"default",(function(){return e}));var u=n(2);function e(){return Object(u.jsx)("img",{style:{height:"auto",width:"100%"},src:"/upload/notfound.jpg",alt:"not found"})}}}]);
+//# sourceMappingURL=30.d19e81b3.chunk.js.map
