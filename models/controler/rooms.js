@@ -16,9 +16,9 @@ module.exports.getRoom = async (req, res) => {
   }
 };
 
-module.exports.getCategory = async (req, res) => {
+module.exports.gettype = async (req, res) => {
   try{
-  const roomuser = await Room.find({category:req.params.category}).sort({'updatedAt':-1}).limit(Number(req.params.id)).populate("users");
+  const roomuser = await Room.find({type:req.params.type}).sort({'updatedAt':-1}).limit(Number(req.params.id)).populate("users");
   res.status(200).json({
     data: roomuser,
   });}catch(e){
@@ -78,7 +78,7 @@ module.exports.addRoom = async (req, res) => {
       });
     }
 
-    const { name, price, address, facility, description, details,category } = req.body;
+    const { name, price, address, facility, description, details,type } = req.body;
 
     const createroom = await Room.create({
       name,
@@ -87,7 +87,7 @@ module.exports.addRoom = async (req, res) => {
       facility,
       description,
       details,
-      category
+      type
     });
     const user = await User.findOne({ _id: req.userID });
 

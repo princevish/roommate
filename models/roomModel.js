@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require('../models/usersModel');
+
 const roomSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -67,13 +67,22 @@ const roomSchema = new mongoose.Schema({
         type: String,
 
     },
-    category: {
+    type: {
+        type: String,
+
+    },
+    onlyfor: {
         type: String,
 
     },
     images: [{
         type: String
+    }],
+    reviews: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Review'
     }]
+
 
 }, {
     timestamps: true

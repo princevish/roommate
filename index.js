@@ -12,8 +12,8 @@ var http = require('http').createServer(app);
 const PORT = 5000;
 var io = require('socket.io')(http);
 
-
-http.listen(PORT, () => {
+const cip = process.env.CIP;
+http.listen(PORT,cip, () => {
     console.log(`listening on *:${PORT}`);
 });
 let user =[]
@@ -81,7 +81,7 @@ app.get('*',(req,res)=>{
 })
 
 const port = process.env.PORT;
-const ip = process.env.IP || '0.0.0.0';
+const ip = process.env.IP;
 app.listen(port,ip, () =>
   console.log(`Example app listening on port port! ${port}`)
 );

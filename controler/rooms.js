@@ -1,8 +1,9 @@
 const User = require("../models/usersModel");
 const Room = require("../models/roomModel");
+const Review = require("../models/reviewsModel");
 const { validationResult } = require("express-validator");
 const cloudinary =require("../config/cloudinary");
-const fs = require("fs");
+
 
 module.exports.getRoom = async (req, res) => {
   try{
@@ -16,9 +17,9 @@ module.exports.getRoom = async (req, res) => {
   }
 };
 
-module.exports.getCategory = async (req, res) => {
+module.exports.gettype = async (req, res) => {
   try{
-  const roomuser = await Room.find({category:req.params.category}).sort({'updatedAt':-1}).limit(Number(req.params.id)).populate("users");
+  const roomuser = await Room.find({type:req.params.type}).sort({'updatedAt':-1}).limit(Number(req.params.id)).populate("users");
   res.status(200).json({
     data: roomuser,
   });}catch(e){
@@ -52,17 +53,6 @@ module.exports.roomfav = async (req, res) => {
   }
 };
 
-async function deletephoto(photos) {
-  try{
-  await fs.unlinkSync(photos);
-  return;}
-  catch(e) {
-    res.status(404).json({
-      data:e,
-    });
-  }
-}
-
 module.exports.addRoom = async (req, res) => {
   try {
     /// validation check result
@@ -78,7 +68,7 @@ module.exports.addRoom = async (req, res) => {
       });
     }
 
-    const { name, price, address, facility, description, details,category } = req.body;
+    const { name, price, address, facility, description, details,type,onlyfor } = req.body;
 
     const createroom = await Room.create({
       name,
@@ -87,7 +77,7 @@ module.exports.addRoom = async (req, res) => {
       facility,
       description,
       details,
-      category
+      type,onlyfor
     });
     const user = await User.findOne({ _id: req.userID });
 
@@ -176,10 +166,7 @@ module.exports.roomdelete=async(req,res)=>{
    
      await User.updateOne({ _id: req.userID },{"$pull": { "room": room._id}})
      room.remove();
-      room.images.map((item) => {
-          
-          deletephoto(item);
-        });
+     
    return res.status(200).json({
       data: "delele room"
     });
@@ -195,4 +182,41 @@ module.exports.roomdelete=async(req,res)=>{
       data: e,
     });
   }
+}
+
+module.exports.reviewview =async(req,res)=>{
+  try{
+  const reviewss = await Review.create({
+    room:req.params.id,
+    user:req.userID,
+    comment:req.body.data
+  })
+  const room =await Room.findById({_id:req.params.id});
+  room.reviews.push(reviewss);
+  await room.save();
+  return res.status(201).json({
+    data: "create reviews"
+  });
+}catch(e){
+    return res.status(404).json({
+      data: e,
+    });
+  }
+}
+module.exports.reviewget =async(req,res)=>{
+ 
+try{
+  const room =await Room.findOne({_id:req.params.id}).populate({
+    path: "reviews",
+    populate: "user",
+  });
+
+  return res.status(201).json({
+    data: room.reviews
+  });
+}catch(e){
+  return res.status(404).json({
+    data: e,
+  });
+}
 }
