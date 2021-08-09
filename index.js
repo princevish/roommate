@@ -66,7 +66,7 @@ app.use(function (err, req, res, next) {
 app.use(express.static("views"));
 app.use("/upload", express.static("upload"));
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "https://roommate.cleverapps.io");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Headers",
